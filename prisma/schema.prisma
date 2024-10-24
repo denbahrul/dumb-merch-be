@@ -21,23 +21,30 @@ model User {
 
   role RoleEnum @default(CUSTOMER)
 
+  createdAt DateTime @default(now())
+  updateAt DateTime @default(now()) @updatedAt
+
   @@map("user")
 }
 
 enum RoleEnum {
-  SELLER
+  ADMIN
   CUSTOMER
 }
 
 model Profile {
   id Int @id @default(autoincrement())
   name String
+  profilePhoto String?
   phone String?
   gender GenderEnum?
   address String?
 
   user User @relation(fields: [userId], references: [id])
   userId Int @unique
+
+  createdAt DateTime @default(now())
+  updateAt DateTime @default(now()) @updatedAt
 
   @@map("profile")
 }

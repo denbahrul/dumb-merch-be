@@ -7,6 +7,7 @@ class UserRepositories {
       data: {
         email: registerDto.email,
         password: registerDto.password,
+        role: registerDto.role,
         profile: {
           create: {
             name: registerDto.name,
