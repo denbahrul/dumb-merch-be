@@ -52,6 +52,20 @@ class AuthServices {
       accessToken,
     };
   }
+
+  // async getUserLogged(email: string) {
+  //   const user = await userRepositories.findUserByEmail(email);
+
+  //   if (!user) {
+  //     throw {
+  //       status: "fail",
+  //       message: "Invalid user token",
+  //     };
+  //   }
+
+  //   const { password, ...data } = user;
+  //   return data;
+  // }
 }
 
 export default new AuthServices();

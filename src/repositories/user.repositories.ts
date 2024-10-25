@@ -24,6 +24,17 @@ class UserRepositories {
       },
     });
   }
+
+  async findUserAndProfile(email: string) {
+    return prisma.user.findUnique({
+      where: {
+        email,
+      },
+      include: {
+        profile: true,
+      },
+    });
+  }
 }
 
 export default new UserRepositories();

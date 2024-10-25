@@ -15,7 +15,12 @@ class AuthControllers {
         user,
       });
     } catch (error) {
-      res.status(500).json(error);
+      console.log(error);
+
+      const err = error as Error;
+      res.status(500).json({
+        message: err.message,
+      });
     }
   }
 
@@ -27,7 +32,28 @@ class AuthControllers {
         user,
       });
     } catch (error) {
-      res.status(400).json(error);
+      console.log(error);
+
+      const err = error as Error;
+      res.status(400).json({
+        message: err.message,
+      });
+    }
+  }
+
+  async getUserLogged(req: Request, res: Response) {
+    try {
+      const user = res.locals.user;
+      res.json({
+        user,
+      });
+    } catch (error) {
+      console.log(error);
+
+      const err = error as Error;
+      res.status(500).json({
+        message: err.message,
+      });
     }
   }
 }
