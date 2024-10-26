@@ -24,6 +24,9 @@ class ProfileControllers {
   async updateProfile(req: Request, res: Response) {
     try {
       const userId = res.locals.user.id;
+      const profilePhoto = req.file;
+      console.log(profilePhoto);
+
       const body: UpdateProfileDTO = req.body;
       const profile = await userServices.updateProfile(userId, body);
       res.json({
