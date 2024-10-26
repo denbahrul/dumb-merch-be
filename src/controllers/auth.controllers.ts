@@ -49,7 +49,6 @@ class AuthControllers {
       });
     } catch (error) {
       console.log(error);
-
       const err = error as Error;
       res.status(500).json({
         message: err.message,

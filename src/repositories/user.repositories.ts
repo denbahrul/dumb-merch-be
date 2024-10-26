@@ -1,9 +1,10 @@
 import { RegisterDTO } from "@/dto/auth.dto";
+import { UpdateProfileDTO } from "@/dto/user.dto";
 import { prisma } from "@/libs/prisma";
 
 class UserRepositories {
   async createUser(registerDto: RegisterDTO) {
-    return prisma.user.create({
+    return await prisma.user.create({
       data: {
         email: registerDto.email,
         password: registerDto.password,
@@ -18,23 +19,40 @@ class UserRepositories {
   }
 
   async findUserByEmail(email: string) {
-    return prisma.user.findUnique({
+    return await prisma.user.findUnique({
       where: {
         email,
       },
     });
   }
 
-  async findUserAndProfile(email: string) {
-    return prisma.user.findUnique({
+  async findUserAndProfile(id: number) {
+    return await prisma.user.findUnique({
       where: {
-        email,
+        id,
       },
-      include: {
+      select: {
+        id: true,
+        email: true,
         profile: true,
       },
     });
   }
-}
 
+  async updateProfile(userId: number, body: UpdateProfileDTO) {
+    return await prisma.profile.update({
+      where: {
+        userId,
+      },
+      data: {
+        ...body,
+        // name: body.name,
+        // phone: body.phone,
+        // gender: body.gender,
+        // address: body.address,
+        // profilePhoto: body.profilePhoto,
+      },
+    });
+  }
+}
 export default new UserRepositories();
