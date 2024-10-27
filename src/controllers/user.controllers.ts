@@ -1,4 +1,5 @@
 import { UpdateProfileDTO } from "@/dto/user.dto";
+import cloudinaryServices from "@/services/cloudinary.services";
 import userServices from "@/services/user.services";
 import profileServices from "@/services/user.services";
 import { Request, Response } from "express";
@@ -24,11 +25,19 @@ class ProfileControllers {
   async updateProfile(req: Request, res: Response) {
     try {
       const userId = res.locals.user.id;
-      const profilePhoto = req.file;
-      console.log(profilePhoto);
-
       const body: UpdateProfileDTO = req.body;
-      const profile = await userServices.updateProfile(userId, body);
+      const fileUpload = req.file;
+      const data = {
+        ...body,
+        userId,
+      };
+
+      if (fileUpload) {
+        const image = await cloudinaryServices.upload(fileUpload as Express.Multer.File);
+        data.profilePhoto = image.secure_url;
+      }
+
+      const profile = await userServices.updateProfile(data);
       res.json({
         profile,
       });

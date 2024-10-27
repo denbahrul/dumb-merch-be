@@ -39,13 +39,14 @@ class UserRepositories {
     });
   }
 
-  async updateProfile(userId: number, body: UpdateProfileDTO) {
+  async updateProfile(body: UpdateProfileDTO) {
+    const { userId, ...data } = body;
     return await prisma.profile.update({
       where: {
-        userId,
+        userId: body.userId,
       },
       data: {
-        ...body,
+        ...data,
         // name: body.name,
         // phone: body.phone,
         // gender: body.gender,

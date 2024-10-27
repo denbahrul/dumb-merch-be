@@ -5,8 +5,8 @@ class ProfileServices {
   async getProfile(userId: number) {
     return await userRepositories.findUserAndProfile(userId);
   }
-  async updateProfile(userId: number, dto: UpdateProfileDTO) {
-    return await userRepositories.updateProfile(userId, dto);
+  async updateProfile(dto: UpdateProfileDTO) {
+    return await userRepositories.updateProfile(dto);
   }
 }
 
