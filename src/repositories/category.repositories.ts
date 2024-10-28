@@ -1,14 +1,9 @@
 import { prisma } from "@/libs/prisma";
 
 class CategoryRepositories {
-  async delete(categoryId: number) {
-    return prisma.category.delete({
-      where: {
-        id: categoryId,
-      },
-    });
+  async findAll() {
+    return prisma.category.findMany();
   }
-
   async create(userId: number, categoryName: string) {
     return prisma.category.create({
       data: {
@@ -29,8 +24,12 @@ class CategoryRepositories {
     });
   }
 
-  async findAll() {
-    return prisma.category.findMany();
+  async delete(categoryId: number) {
+    return prisma.category.delete({
+      where: {
+        id: categoryId,
+      },
+    });
   }
 }
 

@@ -79,10 +79,10 @@ model Category {
 model Product {
   id Int @id @default(autoincrement())
   productName String
-  productImage ProductImage[]
   description String
   price Decimal @default(0.0)
   quantity Int
+  productImage ProductImage[]
 
   user User @relation(fields: [userId], references: [id])
   userId Int

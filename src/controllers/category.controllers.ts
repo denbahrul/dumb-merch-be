@@ -1,4 +1,6 @@
+import { CategoryDTO } from "@/dto/category.dto";
 import categoryServices from "@/services/category.services";
+import { CategorySchema } from "@/utils/schemas/category.schema";
 import { Request, Response } from "express";
 
 class CategoryControllers {
@@ -21,9 +23,10 @@ class CategoryControllers {
   async create(req: Request, res: Response) {
     try {
       const userId = res.locals.user.id;
-      const { categoryName } = req.body;
+      const categoryBody = req.body as CategoryDTO;
+      const value = await CategorySchema.validateAsync(categoryBody);
 
-      const data = await categoryServices.create(userId, categoryName);
+      const data = await categoryServices.create(userId, value.categoryName);
       res.json({
         message: "Category created",
         data,
@@ -41,8 +44,10 @@ class CategoryControllers {
   async update(req: Request, res: Response) {
     try {
       const categoryId = +req.params.id;
-      const { categoryName } = req.body;
-      const data = await categoryServices.update(categoryId, categoryName);
+      const categoryBody = req.body as CategoryDTO;
+      const value = await CategorySchema.validateAsync(categoryBody);
+
+      const data = await categoryServices.update(categoryId, value.categoryName);
       res.json({
         message: "Category updated",
         data,
