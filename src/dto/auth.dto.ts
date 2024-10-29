@@ -1,8 +1,9 @@
 import { RoleEnum } from "@prisma/client";
 
 export interface RegisterDTO {
-  name: string;
+  fullName: string;
   email: string;
+  username: string;
   password: string;
   role: RoleEnum;
 }

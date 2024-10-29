@@ -1,5 +1,6 @@
 import { LoginDTO, RegisterDTO } from "@/dto/auth.dto";
 import authServices from "@/services/auth.services";
+import userServices from "@/services/user.services";
 import { LoginSchema, RegisterSchema } from "@/utils/schemas/auth.schema";
 import { Request, Response } from "express";
 
@@ -8,11 +9,12 @@ class AuthControllers {
     try {
       const registerBody = req.body as RegisterDTO;
       const value = await RegisterSchema.validateAsync(registerBody);
-      console.log(registerBody);
 
-      const user = await authServices.register(value);
+      await authServices.register(value);
+      const data = await authServices.login(value);
       res.json({
-        user,
+        message: "User created",
+        data,
       });
     } catch (error) {
       console.log(error);
@@ -27,9 +29,10 @@ class AuthControllers {
   async login(req: Request, res: Response) {
     try {
       const loginBody = await LoginSchema.validateAsync(req.body as LoginDTO);
-      const user = await authServices.login(loginBody);
+      const data = await authServices.login(loginBody);
       res.json({
-        user,
+        message: "User logged succesfully",
+        data,
       });
     } catch (error) {
       console.log(error);
@@ -44,8 +47,9 @@ class AuthControllers {
   async getUserLogged(req: Request, res: Response) {
     try {
       const user = res.locals.user;
+      const data = await authServices.getUserLogged(user.id);
       res.json({
-        user,
+        ...data,
       });
     } catch (error) {
       console.log(error);

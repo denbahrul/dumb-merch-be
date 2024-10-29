@@ -4,12 +4,13 @@ import Joi from "joi";
 export const createProductSchema = Joi.object<CreateProductDTO>({
   productName: Joi.string().required(),
   description: Joi.string().required(),
-  price: Joi.number().precision(2),
+  price: Joi.number().precision(4),
   quantity: Joi.number().required(),
   categoryId: Joi.number().required(),
   userId: Joi.number().required(),
   productImage: Joi.array(),
 });
+
 export const updateProductSchema = Joi.object<CreateProductDTO>({
   productName: Joi.string().required(),
   description: Joi.string().required(),

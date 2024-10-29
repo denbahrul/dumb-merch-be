@@ -15,9 +15,20 @@ class AuthServices {
     }
 
     const hashedPassword = await bcrypt.hash(registerInfo.password, 10);
+    let generateUsername;
+    let existedUsername;
+
+    do {
+      const randomMath = Math.floor(Math.random() * 1000);
+      const emailSplit = registerInfo.email.split("@")[0];
+      generateUsername = `${emailSplit}${randomMath}`;
+
+      existedUsername = await userRepositories.getUserByUsername(generateUsername);
+    } while (existedUsername);
 
     const { password, ...createdUser } = await userRepositories.createUser({
       ...registerInfo,
+      username: generateUsername,
       password: hashedPassword,
     });
 
@@ -53,19 +64,18 @@ class AuthServices {
     };
   }
 
-  // async getUserLogged(email: string) {
-  //   const user = await userRepositories.findUserByEmail(email);
+  async getUserLogged(id: number) {
+    const user = await userRepositories.findUserById(id);
 
-  //   if (!user) {
-  //     throw {
-  //       status: "fail",
-  //       message: "Invalid user token",
-  //     };
-  //   }
+    if (!user) {
+      throw {
+        status: "fail",
+        message: "Invalid user token",
+      };
+    }
 
-  //   const { password, ...data } = user;
-  //   return data;
-  // }
+    return user;
+  }
 }
 
 export default new AuthServices();

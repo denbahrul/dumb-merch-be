@@ -8,10 +8,11 @@ class UserRepositories {
       data: {
         email: registerDto.email,
         password: registerDto.password,
+        username: registerDto.username,
         role: registerDto.role,
         profile: {
           create: {
-            name: registerDto.name,
+            fullName: registerDto.fullName,
           },
         },
       },
@@ -22,6 +23,19 @@ class UserRepositories {
     return await prisma.user.findUnique({
       where: {
         email,
+      },
+    });
+  }
+  async findUserById(id: number) {
+    return await prisma.user.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        username: true,
       },
     });
   }
@@ -47,11 +61,19 @@ class UserRepositories {
       },
       data: {
         ...data,
-        // name: body.name,
+        // fullName: body.fullName,
         // phone: body.phone,
         // gender: body.gender,
         // address: body.address,
         // profilePhoto: body.profilePhoto,
+      },
+    });
+  }
+
+  async getUserByUsername(username: string) {
+    return prisma.user.findUnique({
+      where: {
+        username,
       },
     });
   }
