@@ -20,6 +20,23 @@ class CategoryControllers {
     }
   }
 
+  async findById(req: Request, res: Response) {
+    try {
+      const categoryId = +req.params.id;
+      const data = await categoryServices.findById(categoryId);
+      res.json({
+        data,
+      });
+    } catch (error) {
+      console.log(error);
+
+      const err = error as Error;
+      res.status(500).json({
+        message: err.message,
+      });
+    }
+  }
+
   async create(req: Request, res: Response) {
     try {
       const userId = res.locals.user.id;
@@ -65,10 +82,11 @@ class CategoryControllers {
   async delete(req: Request, res: Response) {
     try {
       const categoryId = +req.params.id;
-      await categoryServices.delete(categoryId);
+      const data = await categoryServices.delete(categoryId);
 
       res.json({
-        message: "Category deleted",
+        message: `Category ${data.categoryName} deleted`,
+        data,
       });
     } catch (error) {
       console.log(error);

@@ -39,6 +39,7 @@ class ProfileControllers {
 
       const profile = await userServices.updateProfile(data);
       res.json({
+        message: "Profile updated",
         profile,
       });
     } catch (error) {

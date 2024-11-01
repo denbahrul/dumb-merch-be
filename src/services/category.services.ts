@@ -5,6 +5,10 @@ class CategoryServices {
     return await categoryRepositories.findAll();
   }
 
+  async findById(categorytId: number) {
+    return await categoryRepositories.findById(categorytId);
+  }
+
   async create(userId: number, categoryName: string) {
     return await categoryRepositories.create(userId, categoryName);
   }

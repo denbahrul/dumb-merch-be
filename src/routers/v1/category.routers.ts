@@ -6,6 +6,7 @@ import { Router } from "express";
 export const categoryRoutes = Router();
 
 categoryRoutes.get("/", categoryControllers.findAll);
+categoryRoutes.get("/:id", categoryControllers.findById);
 categoryRoutes.post("/create", authentication, authorization("ADMIN"), categoryControllers.create);
 categoryRoutes.patch("/update/:id", authentication, authorization("ADMIN"), categoryControllers.update);
 categoryRoutes.delete("/delete/:id", authentication, authorization("ADMIN"), categoryControllers.delete);

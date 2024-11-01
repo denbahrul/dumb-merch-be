@@ -74,14 +74,24 @@ class ProductControllers {
 
   async update(req: Request, res: Response) {
     try {
-      const userId = res.locals.user.id;
       const productId = +req.params.id;
       const body: UpdateProductDTO = req.body;
-      // body.userId = userId;
+      if (req.files) {
+        const images = req.files as Express.Multer.File[];
+        const imagesUrl = await Promise.all(
+          images.map(async (image) => {
+            const uploadResult = await cloudinaryServices.upload(image);
+            return { url: uploadResult.secure_url };
+          })
+        );
+
+        body.productImage = imagesUrl;
+      }
 
       const data = await updateProductSchema.validateAsync(body);
       const product = await productServices.update(productId, data);
       res.json({
+        message: "Product updated",
         product,
       });
     } catch (error) {
@@ -100,6 +110,25 @@ class ProductControllers {
       const data = await productServices.delete(productId);
       res.json({
         message: `Product ${data.productName} was deleted`,
+        data,
+      });
+    } catch (error) {
+      console.log(error);
+
+      const err = error as Error;
+      res.status(500).json({
+        message: err.message,
+      });
+    }
+  }
+
+  async deleteProductImage(req: Request, res: Response) {
+    try {
+      const id = +req.params.id;
+      const data = await productServices.deleteProductImage(id);
+      res.json({
+        message: `Image was deleted`,
+        data,
       });
     } catch (error) {
       console.log(error);

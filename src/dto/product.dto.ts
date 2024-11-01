@@ -14,7 +14,7 @@ export interface UpdateProductDTO {
   price: string;
   quantity: number;
   categoryId: number;
-  // productImage?: ProductImage[];
+  productImage?: ProductImage[];
 }
 
 export interface ProductImage {

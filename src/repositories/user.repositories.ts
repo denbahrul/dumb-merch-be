@@ -41,31 +41,34 @@ class UserRepositories {
   }
 
   async findUserAndProfile(id: number) {
-    return await prisma.user.findUnique({
+    return await prisma.profile.findUnique({
       where: {
         id,
       },
-      select: {
-        id: true,
-        email: true,
-        profile: true,
+      include: {
+        user: {
+          select: {
+            username: true,
+            email: true,
+          },
+        },
       },
     });
   }
 
   async updateProfile(body: UpdateProfileDTO) {
-    const { userId, ...data } = body;
+    const { userId, username, ...data } = body;
     return await prisma.profile.update({
       where: {
         userId: body.userId,
       },
       data: {
         ...data,
-        // fullName: body.fullName,
-        // phone: body.phone,
-        // gender: body.gender,
-        // address: body.address,
-        // profilePhoto: body.profilePhoto,
+        user: {
+          update: {
+            username,
+          },
+        },
       },
     });
   }

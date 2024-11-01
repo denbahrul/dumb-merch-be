@@ -38,7 +38,7 @@ class ProductRepositories {
   }
 
   async update(productId: number, updateCategoryDto: UpdateProductDTO) {
-    const { ...data } = updateCategoryDto;
+    const { productImage, ...data } = updateCategoryDto;
     return await prisma.product.update({
       where: {
         id: productId,
@@ -51,6 +51,13 @@ class ProductRepositories {
     return await prisma.product.delete({
       where: {
         id: productId,
+      },
+    });
+  }
+  async deleteProductImage(id: number) {
+    return await prisma.productImage.delete({
+      where: {
+        id,
       },
     });
   }

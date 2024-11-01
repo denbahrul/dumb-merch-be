@@ -7,4 +7,5 @@ export interface UpdateProfileDTO extends Record<string, any> {
   phone?: string;
   gender?: GenderEnum;
   address?: string;
+  username?: string;
 }

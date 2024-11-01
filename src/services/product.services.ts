@@ -21,15 +21,18 @@ class ProductServices {
 
   async update(productId: number, body: UpdateProductDTO) {
     const product = await productRepositories.update(productId, body);
-    // if (body.productImage) {
-    //   await productRepositories.createImage(body.productImage, product.id);
-    // }
+    if (body.productImage) {
+      await productRepositories.createImage(body.productImage, product.id);
+    }
 
     return product;
   }
 
   async delete(productId: number) {
     return await productRepositories.delete(productId);
+  }
+  async deleteProductImage(productId: number) {
+    return await productRepositories.deleteProductImage(productId);
   }
 }
 

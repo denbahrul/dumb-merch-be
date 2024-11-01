@@ -2,8 +2,24 @@ import { prisma } from "@/libs/prisma";
 
 class CategoryRepositories {
   async findAll() {
-    return prisma.category.findMany();
+    return prisma.category.findMany({
+      include: {
+        _count: {
+          select: {
+            product: true,
+          },
+        },
+      },
+    });
   }
+  async findById(categoryId: number) {
+    return await prisma.category.findUnique({
+      where: {
+        id: categoryId,
+      },
+    });
+  }
+
   async create(userId: number, categoryName: string) {
     return prisma.category.create({
       data: {
