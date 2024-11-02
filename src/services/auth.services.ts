@@ -1,4 +1,5 @@
 import { LoginDTO, RegisterDTO } from "@/dto/auth.dto";
+import cartRepositories from "@/repositories/cart.repositories";
 import userRepositories from "@/repositories/user.repositories";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -31,6 +32,10 @@ class AuthServices {
       username: generateUsername,
       password: hashedPassword,
     });
+
+    if (createdUser.role === "CUSTOMER") {
+      await cartRepositories.createCart(createdUser.id);
+    }
 
     return createdUser;
   }
