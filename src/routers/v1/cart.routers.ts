@@ -4,4 +4,6 @@ import { Router } from "express";
 
 export const CartRoutes = Router();
 
-CartRoutes.post("/add", authentication, cartControllers.addCartItem);
+CartRoutes.get("/", cartControllers.getCartByUser);
+CartRoutes.post("/add", cartControllers.addCartItem);
+CartRoutes.delete("/delete/:id", cartControllers.deleteCartItem);

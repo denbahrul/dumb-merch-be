@@ -7,6 +7,23 @@ class CartRepositories {
       where: {
         userId,
       },
+      include: {
+        _count: {
+          select: {
+            cartItem: true,
+          },
+        },
+        cartItem: {
+          include: {
+            product: {
+              include: {
+                category: true,
+                productImage: true,
+              },
+            },
+          },
+        },
+      },
     });
   }
 
@@ -30,6 +47,14 @@ class CartRepositories {
   async createCartItem(data: addCartItemDTO) {
     return prisma.cartItem.create({
       data,
+      include: {
+        product: {
+          include: {
+            productImage: true,
+            category: true,
+          },
+        },
+      },
     });
   }
 
@@ -40,6 +65,22 @@ class CartRepositories {
       },
       data: {
         quantity,
+      },
+      include: {
+        product: {
+          include: {
+            productImage: true,
+            category: true,
+          },
+        },
+      },
+    });
+  }
+
+  async deleteCartItem(cartItemId: number) {
+    return prisma.cartItem.delete({
+      where: {
+        id: cartItemId,
       },
     });
   }

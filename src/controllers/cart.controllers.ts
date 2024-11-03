@@ -23,6 +23,37 @@ export class CartControllers {
       });
     }
   }
+
+  async getCartByUser(req: Request, res: Response) {
+    try {
+      const userId = res.locals.user.id;
+      const data = await cartServices.getCartByUser(userId);
+      res.json(data);
+    } catch (error) {
+      console.log(error);
+
+      const err = error as Error;
+      res.status(500).json({
+        message: err.message,
+      });
+    }
+  }
+
+  async deleteCartItem(req: Request, res: Response) {
+    try {
+      const cartItemId = req.params.id;
+
+      const data = await cartServices.deleteCartItem(+cartItemId);
+      res.json(data);
+    } catch (error) {
+      console.log(error);
+
+      const err = error as Error;
+      res.status(500).json({
+        message: err.message,
+      });
+    }
+  }
 }
 
 export default new CartControllers();

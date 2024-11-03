@@ -3,12 +3,14 @@ import cartRepositories from "@/repositories/cart.repositories";
 
 class CartService {
   async addItemToCart(userId: number, itemBody: addCartItemDTO) {
-    let cart = await cartRepositories.findCartByUser(userId);
+    const cart = await cartRepositories.findCartByUser(userId);
+    let cartId = cart?.id;
     if (!cart) {
-      cart = await cartRepositories.createCart(userId);
+      const cart = await cartRepositories.createCart(userId);
+      cartId = cart.id;
     }
     const data = itemBody;
-    data.cartId = cart!.id;
+    data.cartId = cartId!;
     const existingCartItem = await cartRepositories.findCartItemByProductAnCart(data.productId, data.cartId);
 
     let newCartItem;
@@ -18,6 +20,14 @@ class CartService {
       newCartItem = await cartRepositories.updateCartItem(existingCartItem.id, existingCartItem.quantity + itemBody.quantity);
     }
     return newCartItem;
+  }
+
+  async getCartByUser(userId: number) {
+    return await cartRepositories.findCartByUser(userId);
+  }
+
+  async deleteCartItem(cartItemId: number) {
+    return await cartRepositories.deleteCartItem(cartItemId);
   }
 }
 
