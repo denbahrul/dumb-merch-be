@@ -5,7 +5,7 @@ import { categoryRoutes } from "./v1/category.routers";
 import { productRoutes } from "./v1/product.routers";
 import { CartRoutes } from "./v1/cart.routers";
 import { authentication } from "@/middlewares/authentication";
-import { PaymentController } from "@/controllers/payment.controllers";
+import { OrderController } from "@/controllers/order.controllers";
 
 export const routerV1 = Router();
 
@@ -15,4 +15,4 @@ routerV1.use("/category", categoryRoutes);
 routerV1.use("/product", productRoutes);
 routerV1.use("/cart", authentication, CartRoutes);
 
-routerV1.post("/payment", PaymentController);
+routerV1.post("/order", authentication, OrderController);

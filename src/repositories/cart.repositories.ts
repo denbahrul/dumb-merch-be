@@ -27,6 +27,14 @@ class CartRepositories {
     });
   }
 
+  async findCartById(cartId: number) {
+    return prisma.cart.findUnique({
+      where: {
+        id: cartId,
+      },
+    });
+  }
+
   async findCartItemByProductAnCart(productId: number, cartId: number) {
     return prisma.cartItem.findFirst({
       where: {
@@ -41,12 +49,44 @@ class CartRepositories {
       data: {
         userId,
       },
+      include: {
+        _count: {
+          select: {
+            cartItem: true,
+          },
+        },
+        cartItem: {
+          include: {
+            product: {
+              include: {
+                category: true,
+                productImage: true,
+              },
+            },
+          },
+        },
+      },
     });
   }
 
-  async createCartItem(data: addCartItemDTO) {
+  async updateCart(cartId: number, totalPrice: number) {
+    return prisma.cart.update({
+      where: {
+        id: cartId,
+      },
+      data: {
+        totalPrice,
+      },
+    });
+  }
+
+  async createCartItem(data: addCartItemDTO, totalPrice: number) {
+    const { price, ...value } = data;
     return prisma.cartItem.create({
-      data,
+      data: {
+        ...value,
+        totalPrice,
+      },
       include: {
         product: {
           include: {
@@ -58,13 +98,14 @@ class CartRepositories {
     });
   }
 
-  async updateCartItem(cartItemId: number, quantity: number) {
+  async updateCartItem(cartItemId: number, quantity: number, totalPrice: number) {
     return prisma.cartItem.update({
       where: {
         id: cartItemId,
       },
       data: {
         quantity,
+        totalPrice,
       },
       include: {
         product: {
@@ -73,6 +114,14 @@ class CartRepositories {
             category: true,
           },
         },
+      },
+    });
+  }
+
+  async findCartItemById(cartItemId: number) {
+    return prisma.cartItem.findUnique({
+      where: {
+        id: cartItemId,
       },
     });
   }
