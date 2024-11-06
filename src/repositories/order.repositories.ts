@@ -3,7 +3,7 @@ import { prisma } from "@/libs/prisma";
 
 class OrderRepositories {
   async createOrder(userId: number, orderDto: OrderDTO, transactionToken: string, orderId: string) {
-    await prisma.order.create({
+    return await prisma.order.create({
       data: {
         userId,
         totalPrice: orderDto.totalPrice,
@@ -13,11 +13,34 @@ class OrderRepositories {
           create: orderDto.orderItem.map((item) => ({
             productId: item.productId,
             quantity: item.quantity,
+            totalPrice: item.totalPrice,
           })),
         },
       },
       include: {
         orderItems: true,
+      },
+    });
+  }
+
+  async getAllOrder() {
+    return await prisma.order.findMany({
+      include: {
+        user: {
+          select: {
+            profile: true,
+          },
+        },
+        orderItems: {
+          include: {
+            product: {
+              include: {
+                category: true,
+                productImage: true,
+              },
+            },
+          },
+        },
       },
     });
   }

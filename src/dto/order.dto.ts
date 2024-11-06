@@ -6,6 +6,7 @@ export interface OrderDTO {
   status?: OrderStatusEnum;
   orderItem: OrderItemDTO[];
   totalPrice: number;
+  cartId: number;
 }
 
 export interface OrderItemDTO {
@@ -13,4 +14,5 @@ export interface OrderItemDTO {
   product: IProduct;
   orderId: number;
   quantity: number;
+  totalPrice: number;
 }

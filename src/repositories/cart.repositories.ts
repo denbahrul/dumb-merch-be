@@ -133,6 +133,14 @@ class CartRepositories {
       },
     });
   }
+
+  async deleteAllCartItem(cartId: number) {
+    return prisma.cartItem.deleteMany({
+      where: {
+        cartId,
+      },
+    });
+  }
 }
 
 export default new CartRepositories();

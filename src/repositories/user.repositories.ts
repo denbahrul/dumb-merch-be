@@ -50,6 +50,20 @@ class UserRepositories {
           select: {
             username: true,
             email: true,
+            order: {
+              include: {
+                orderItems: {
+                  include: {
+                    product: {
+                      include: {
+                        productImage: true,
+                        category: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
         },
       },
