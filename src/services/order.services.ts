@@ -32,9 +32,7 @@ class OrderServices {
 
     const transaction = await midtrans.createTransaction(parameter);
     await orderRepositories.createOrder(userId, orderDto, transaction.token, orderId);
-    console.log("11>>>>>", orderDto.cartId);
     await cartRepositories.deleteAllCartItem(orderDto.cartId);
-    console.log("22>>>>>", orderDto.cartId);
 
     await cartRepositories.updateCart(orderDto.cartId, 0);
     return transaction;

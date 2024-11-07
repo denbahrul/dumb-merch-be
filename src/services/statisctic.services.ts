@@ -42,7 +42,7 @@ class StatisticServices {
     });
 
     const monthlySales = salesData.reduce((acc, sale) => {
-      const month = sale.createdAt.getMonth(); // 0-11
+      const month = sale.createdAt.getMonth();
       acc[month] = (acc[month] || 0) + Number(sale._sum.totalPrice);
       return acc;
     }, Array(12).fill(0));

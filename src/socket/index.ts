@@ -1,14 +1,23 @@
 import { Socket, Server } from "socket.io";
 
+interface Message {
+  message: string;
+  username: string;
+  userId: number;
+  //   receiverId: number
+  roomId: string;
+}
+
 const idAdmin = "2";
-let socketAdmin: Socket;
 const chatUsers: string[] = [];
+let socketAdmin: Socket;
+const chatMessages: Record<string, Message[]> = {};
 
 export const socketHandler = (socket: Socket, io: Server) => {
-  console.log(socket.id + "connected");
-  const userId = socket.handshake.query.userId;
+  const userId = socket.handshake.query.userId as string;
+  console.log("user Id " + userId + " connected");
 
-  if (userId !== idAdmin) {
+  if (userId.toString() !== idAdmin) {
     chatUsers.push(userId as string);
     socket.join(`${userId}${idAdmin}`);
     socket.emit("connected", { rooms: [`${userId}${idAdmin}`] });
@@ -19,14 +28,30 @@ export const socketHandler = (socket: Socket, io: Server) => {
     socketAdmin = socket;
     const listRooms = chatUsers.map((user) => `${user}${idAdmin}`);
     socketAdmin.join(listRooms);
-    socketAdmin.emit("connected", { rooms: listRooms });
+    socketAdmin.emit("connected", { rooms: [...new Set(listRooms)] });
   }
 
+  //    when user connected send room details
+
   socket.on("disconnect", () => {
-    console.log(socket.id + " disconncted");
+    console.log(socket.id + " disconnected");
   });
 
-  socket.on("chat message", (data: { message: string; roomId: string }) => {
-    io.to(data.roomId).emit("chat message", data.message);
+  socket.on("getChats", (data) => {
+    const { roomId } = data;
+
+    io.to(roomId).emit("fullChats", chatMessages[roomId]);
+  });
+
+  socket.on("sendChat", (data: Message) => {
+    const { roomId } = data;
+
+    if (!chatMessages[roomId]) {
+      chatMessages[roomId] = [];
+    }
+
+    chatMessages[roomId].push(data);
+
+    io.to(roomId).emit("receiveChats", data);
   });
 };
