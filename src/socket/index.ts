@@ -1,19 +1,15 @@
+import { Message } from "@/dto/chat.dto";
+import { prisma } from "@/libs/prisma";
+import chatRepositories from "@/repositories/chat.repositories";
 import { Socket, Server } from "socket.io";
-
-interface Message {
-  message: string;
-  username: string;
-  userId: number;
-  roomId: string;
-  images: string;
-}
 
 const idAdmin = "2";
 const chatUsers: string[] = [];
 let socketAdmin: Socket;
 const chatMessages: Record<string, Message[]> = {};
 
-export const socketHandler = (socket: Socket, io: Server) => {
+export const socketHandler = async (socket: Socket, io: Server) => {
+  const chatRooms = await chatRepositories.getAllChatRoom();
   const userId = socket.handshake.query.userId as string;
   console.log("user Id " + userId + " connected");
 
@@ -26,7 +22,7 @@ export const socketHandler = (socket: Socket, io: Server) => {
     }
   } else {
     socketAdmin = socket;
-    const listRooms = chatUsers.map((user) => `${user}${idAdmin}`);
+    const listRooms = chatRooms.map((room) => room.name);
     socketAdmin.join(listRooms);
     socketAdmin.emit("connected", { rooms: [...new Set(listRooms)] });
   }
@@ -37,21 +33,34 @@ export const socketHandler = (socket: Socket, io: Server) => {
     console.log(socket.id + " disconnected");
   });
 
-  socket.on("getChats", (data) => {
+  socket.on("getChats", async (data) => {
     const { roomId } = data;
+    console.log(roomId);
 
-    io.to(roomId).emit("fullChats", chatMessages[roomId]);
+    const message = await chatRepositories.getChatByChatRoom(roomId);
+
+    console.log(message);
+
+    io.to(roomId).emit("fullChats", message);
+    // io.to(roomId).emit("fullChats", chatMessages[roomId]);
   });
 
-  socket.on("sendChat", (data: Message) => {
-    const { roomId } = data;
+  socket.on("sendChat", async (data: Message) => {
+    let existingRoom = await chatRepositories.findChatRoom(data.roomId);
 
-    if (!chatMessages[roomId]) {
-      chatMessages[roomId] = [];
+    if (!existingRoom) {
+      existingRoom = await chatRepositories.createRoom(data.roomId, [+userId, 2]);
     }
 
-    chatMessages[roomId].push(data);
+    const savedMessage = await chatRepositories.createChat(data, existingRoom.id);
+    // const { roomId } = data;
 
-    io.to(roomId).emit("receiveChats", data);
+    // if (!chatMessages[roomId]) {
+    //   chatMessages[roomId] = [];
+    // }
+
+    // chatMessages[roomId].push(data);
+
+    io.to(data.roomId).emit("receiveChats", savedMessage);
   });
 };
