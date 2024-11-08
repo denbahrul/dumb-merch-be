@@ -4,8 +4,8 @@ interface Message {
   message: string;
   username: string;
   userId: number;
-  //   receiverId: number
   roomId: string;
+  images: string;
 }
 
 const idAdmin = "2";

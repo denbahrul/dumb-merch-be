@@ -36,6 +36,11 @@ class UserRepositories {
         email: true,
         role: true,
         username: true,
+        profile: {
+          select: {
+            profilePhoto: true,
+          },
+        },
       },
     });
   }
