@@ -28,7 +28,7 @@ class StatisticServices {
     const result = {
       totalProfit: totalProfit._sum.totalPrice,
       totalProductsSold: totalProductsSold._sum.quantity,
-      totalBuyers: totalBuyers,
+      totalBuyers,
       topProduct: topProductDetail?.productName,
     };
 
@@ -40,6 +40,8 @@ class StatisticServices {
       by: ["createdAt"],
       _sum: { totalPrice: true },
     });
+
+    console.log(">>>>>>>>", salesData);
 
     const monthlySales = salesData.reduce((acc, sale) => {
       const month = sale.createdAt.getMonth();
