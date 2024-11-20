@@ -2,10 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "index.ts",
-      "use": "@vercel/node",
-      "config": { "includeFiles": ["dist/**"] }
+      "src": "package.json",
+      "use": "@vercel/node"
     }
   ],
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/dist/index.js"
+    }
+  ]
 }
