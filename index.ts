@@ -5,6 +5,7 @@ import cors from "cors";
 import { Server } from "socket.io";
 import { createServer } from "http";
 import { socketHandler } from "@/socket";
+import "tsconfig-paths/register";
 
 dotenv.config();
 
