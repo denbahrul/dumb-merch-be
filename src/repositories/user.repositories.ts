@@ -36,6 +36,15 @@ class UserRepositories {
         email: true,
         role: true,
         username: true,
+        cart: {
+          select: {
+            _count: {
+              select: {
+                cartItem: true,
+              },
+            },
+          },
+        },
         profile: {
           select: {
             profilePhoto: true,
